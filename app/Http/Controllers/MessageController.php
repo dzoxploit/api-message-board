@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Rules\ValidEmailExtension;
 
 class MessageController extends Controller
@@ -18,15 +19,16 @@ class MessageController extends Controller
                 $searchQuery = $request->get('search');
                 
                 $messages = Message::where('content', 'LIKE', '%' . $searchQuery . '%')
-                                    ->orWhereHas('user', function ($query) use ($searchQuery) {
+                                    ->orWhereHas('users', function ($query) use ($searchQuery) {
                                         $query->where('name', 'LIKE', '%' . $searchQuery . '%')
                                             ->orWhere('email', 'LIKE', '%' . $searchQuery . '%');
                                     })
-                                    ->with('user') // Load relasi user
+                                    ->with('users')
+                                    ->orderBy('id','DESC') // Load relasi user
                                     ->paginate(10);
                 return response()->json($messages, 200);    
             }else{
-                $messages= Message::with('user')->paginate(10);
+                $messages= Message::with('users')->orderBy('id','DESC')->paginate(10);
                 return response()->json($messages, 200);
             }
 
@@ -38,7 +40,7 @@ class MessageController extends Controller
     public function show($id)
     {
         try{
-            $messages = Message::with('user')->find($id);
+            $messages = Message::with('users')->find($id);
             if (!$messages) {
                 return response()->json(['message' => 'Messages not found'], 404);
             }
@@ -69,7 +71,7 @@ class MessageController extends Controller
         ]);
 
         Message::create([
-            'user_id' => $user->id,
+            'users_id' => $user->id,
             'content' => $request->input('content'),
         ]);
 
@@ -94,7 +96,7 @@ class MessageController extends Controller
         $message->content = $request->input('content');
         $message->save();
 
-        $user = User::where('id', $message->user_id)->firstOrFail();
+        $user = User::where('id', $message->users_id)->firstOrFail();
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->save();
@@ -105,29 +107,30 @@ class MessageController extends Controller
     public function destroy($id)
     {
         try{
-            $message = Message::find($id);
+            $message = Message::with('users')->find($id);
 
             if (!$message) {
                 return response()->json(['message' => 'Message not found'], 404);
             }
 
-            $user = $message->user;
+            $user = $message->users;
 
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }
 
-            if ($message->user_id !== $user->id) {
+            if ($message->users_id !== $user->id) {
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
 
             $message->delete();
-            $user->delete(); 
+
+            $userDel = User::where('id',$message->users->id)->first();
+            $userDel->delete(); 
 
             return response()->json(['message' => 'Message deleted successfully']);
         } catch(\Exception $e) {
             return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);
         }
     }
-
 }

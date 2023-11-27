@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Message extends Model
+class PeopleGamification extends Model
 {
     use HasFactory;
 
-    protected $table = 'messages';
+    
+    protected $table = 'people_gamifications';
 
     protected $primaryKey = 'id';
     /**
@@ -18,11 +19,7 @@ class Message extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'users_id',
-        'content',
+        'nama_character',
+        'strength_power',
     ];
-
-    public function users() {
-        return $this->belongsTo(User::class);
-    }
 }

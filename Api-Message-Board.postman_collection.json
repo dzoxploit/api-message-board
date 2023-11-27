@@ -31,6 +31,32 @@
 				"method": "GET",
 				"header": [],
 				"url": {
+					"raw": "http://localhost:8000/api/messages?search=z",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "z"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Message by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
 					"raw": "http://localhost:8000/api/messages/1",
 					"protocol": "http",
 					"host": [
@@ -47,32 +73,6 @@
 			"response": []
 		},
 		{
-			"name": "Message by id",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8000/api/messages?search=johndoe@example.com",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8000",
-					"path": [
-						"api",
-						"messages"
-					],
-					"query": [
-						{
-							"key": "search",
-							"value": "johndoe@example.com"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Message create",
 			"request": {
 				"method": "POST",
@@ -80,18 +80,24 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"content\": \"Hello, this is a test message.\"\n}"
+					"raw": "{\n  \"name\": \"Didin Nur Yahya\",\n  \"email\": \"francescovanboteng@gmail.com\",\n  \"content\": \"Hello, this is a test message.\"\n}"
 				},
 				"url": {
-					"raw": "http://your-api-url/api/messages",
+					"raw": "http://localhost:8000/api/messages",
 					"protocol": "http",
 					"host": [
-						"your-api-url"
+						"localhost"
 					],
+					"port": "8000",
 					"path": [
 						"api",
 						"messages"
@@ -103,7 +109,7 @@
 		{
 			"name": "Message Update",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -112,10 +118,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"updatedemail@example.com\",\n  \"content\": \"Updated message content.\"\n}"
+					"raw": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"updatedemail@gmail.com\",\n  \"content\": \"Updated message content.\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8000/api/messages/1",
+					"raw": "http://localhost:8000/api/messages/update/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -124,6 +130,7 @@
 					"path": [
 						"api",
 						"messages",
+						"update",
 						"1"
 					]
 				}

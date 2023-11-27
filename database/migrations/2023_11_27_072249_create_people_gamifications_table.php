@@ -11,23 +11,23 @@ return new class extends Migration
      *
      * @return void
      */
-   
     public function up()
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('people_gamifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('users_id'); // ID pengguna yang mengirim pesan
-            $table->text('content'); // Konten pesan
+            $table->string('nama_character');
+            $table->integer('strength_power');
             $table->timestamps();
-
-            // Menambahkan relasi ke tabel 'users' dengan kolom 'id'
-            $table->foreign('users_id')->references('id')->on('users');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('people_gamification');
     }
-
 };

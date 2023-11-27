@@ -23,27 +23,22 @@ class ValidEmailExtension implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+   public function passes($attribute, $value)
     {
-        $allowedExtensions = ['.id', '.net', '.com'];
+        // Mengekstrak ekstensi email (bagian setelah titik terakhir)
         $emailParts = explode('@', $value);
+        $domainParts = explode('.', end($emailParts));
 
-        if (count($emailParts) === 2) {
-            $domain = $emailParts[1];
+        // Ekstensi yang diizinkan
+        $allowedExtensions = ['id', 'net', 'com'];
 
-            foreach ($allowedExtensions as $extension) {
-                if (ends_with($domain, $extension)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        // Periksa apakah ekstensi email termasuk dalam yang diizinkan
+        return in_array(end($domainParts), $allowedExtensions);
     }
 
     public function message()
     {
-        return 'Email harus berakhiran ".id", ".net", atau ".com".';
+        return 'The email address must have a valid extension (id, net, com).';
     }
 
 }
